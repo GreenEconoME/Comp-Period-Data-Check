@@ -6,6 +6,9 @@ from Utilities.process_part_elec import process_part_elec
 from Utilities.create_workbook import create_workbook
 from Utilities.plot_kbtu_data import plot_kbtu_data
 
+# Set config to have a wide layout
+st.set_page_config(layout = 'wide')
+
 # Add title and instructions
 st.title('EBEWE Data Check')
 st.sidebar.markdown('''
@@ -95,7 +98,7 @@ if etl_has_ran:
                                         options = partial_dfs[dataset_choice]['Property Name'], 
                                         key = 'building')
         # Plot the chosen building
-        st.plotly_chart(plot_kbtu_data(building_usage, building_choice))
+        st.plotly_chart(plot_kbtu_data(building_usage, building_choice), use_container_width = True)
 
         # Display information on the selected building
         col1, col2 = st.columns(2)
