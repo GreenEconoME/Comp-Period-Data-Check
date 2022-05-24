@@ -92,17 +92,17 @@ def process_part_elec(building_metrics, building_usage):
 
     # Create dataframes to save with the building and their earliest and latest gas billing data
 
-    all_partials_data = create_part_data(partials_df, building_usage)
-    ind_part_21_full_df = create_part_data(partial_21_full_df, building_usage)
-    ind_part_21_miss_df = create_part_data(partial_21_miss_df, building_usage)
-    ind_part_22_full_df = create_part_data(partial_22_full_df, building_usage)
-    ind_part_22_miss_df = create_part_data(partial_22_miss_df, building_usage)
-    ind_part_23_full_df = create_part_data(partial_23_full_df, building_usage)
-    ind_part_23_miss_df = create_part_data(partial_23_miss_df, building_usage)
-    ind_part_24_full_df = create_part_data(partial_24_full_df, building_usage)
-    ind_part_24_miss_df = create_part_data(partial_24_miss_df, building_usage)
-    ind_part_25_full_df = create_part_data(partial_25_full_df, building_usage)
-    ind_part_25_miss_df = create_part_data(partial_25_miss_df, building_usage)
+    all_partials_data = create_part_data(partials_df, building_usage, building_metrics)
+    ind_part_21_full_df = create_part_data(partial_21_full_df, building_usage, building_metrics)
+    ind_part_21_miss_df = create_part_data(partial_21_miss_df, building_usage, building_metrics)
+    ind_part_22_full_df = create_part_data(partial_22_full_df, building_usage, building_metrics)
+    ind_part_22_miss_df = create_part_data(partial_22_miss_df, building_usage, building_metrics)
+    ind_part_23_full_df = create_part_data(partial_23_full_df, building_usage, building_metrics)
+    ind_part_23_miss_df = create_part_data(partial_23_miss_df, building_usage, building_metrics)
+    ind_part_24_full_df = create_part_data(partial_24_full_df, building_usage, building_metrics)
+    ind_part_24_miss_df = create_part_data(partial_24_miss_df, building_usage, building_metrics)
+    ind_part_25_full_df = create_part_data(partial_25_full_df, building_usage, building_metrics)
+    ind_part_25_miss_df = create_part_data(partial_25_miss_df, building_usage, building_metrics)
 
     #############################
     # Return the partially electric dataframes for buildings with full data, and those with missing data
