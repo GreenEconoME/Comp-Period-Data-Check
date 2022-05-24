@@ -29,7 +29,7 @@ st.sidebar.markdown('''
     - Creating the Zoho report:
         - Run and export report titled Buildings Currently Benchmarking for EBEWE
     - About:
-        - Building is considered to have full data if it has gas entries for all months of the comparative period, or through April 2022, whichever comes first.
+        - Building is considered to have full data if it has gas entries for all months of the comparative period, or all months of comparative period to present.
         - Buildings contained in the generated datasets are buildings that we are currently benchmarking for EBEWE.
 ''', unsafe_allow_html = True)
 
@@ -54,20 +54,19 @@ def run_etl():
         building_metrics, building_usage = clean_data(building_metrics, building_usage, current_ebewe)
         
         # Create the processed partially electric dataframes
-        ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df = process_part_elec(building_metrics, building_usage)
+        all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df = process_part_elec(building_metrics, building_usage)
 
         # Create a workbook to download for the partially electric buildings
         workbook = create_workbook(process_part_elec(building_metrics, building_usage))
 
-        return workbook, building_usage, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df
+        return workbook, building_usage, all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df
 
 # Run the etl funciton and return the dataframes that will be used to graph usage
 # Set a boolean to prevent undefined errors prior to running the etl
 etl_has_ran = False
 if espm_report and zoho_report is not None:
+    workbook, building_usage, all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df = run_etl()
     etl_has_ran = True
-    workbook, building_usage, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df = run_etl()
-
 
 # Once the etl has ran, display a download button and display data
 if etl_has_ran:
@@ -76,7 +75,8 @@ if etl_has_ran:
                                 data = workbook,
                                 file_name = 'Partial Electric Building Energy Data by CY.xlsx')
 
-    partial_dfs = {'Compliance Year 2021 Full Data' : ind_part_21_full_df, 
+    partial_dfs = {'All Partial Electric Buildings' : all_partials_data, 
+                    'Compliance Year 2021 Full Data' : ind_part_21_full_df, 
                     'Compliance Year 2021 Missing Data' : ind_part_21_miss_df,
                     'Compliance Year 2022 Full Data' : ind_part_22_full_df, 
                     'Compliance Year 2022 Missing Data' : ind_part_22_miss_df,
@@ -88,7 +88,6 @@ if etl_has_ran:
                     'Compliance Year 2025 Missing Data' : ind_part_25_miss_df}
 
     try:
-        
         # Using the selectbox dropdowns, get the dataframe and building to plot
         dataset_choice = st.selectbox('Choose a Dataset', 
                                         options = [x for x in partial_dfs.keys()], 
@@ -111,6 +110,6 @@ if etl_has_ran:
         st.dataframe(partial_dfs[dataset_choice])
 
     # If there are no buildings within the selected dataframe, return an explanation
-    except KeyError as e:
+    except KeyError:
         st.write('There are no properties in this dataset')
 
