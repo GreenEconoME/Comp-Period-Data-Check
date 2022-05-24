@@ -36,7 +36,7 @@ st.sidebar.markdown('''
 espm_report = st.file_uploader('Upload EBEWE Data Check ESPM Report')
 zoho_report = st.file_uploader('Upload Current EBEWE Opp Zoho Report')
 
-@st.experimental_memo()
+@st.cache
 def run_etl():
     if espm_report and zoho_report is not None:
         building_metrics = pd.read_excel(espm_report, 
