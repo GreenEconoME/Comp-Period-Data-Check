@@ -3,7 +3,7 @@ import numpy as np
 import streamlit as st
 
 
-def clean_data(building_metrics, building_usage, current_ebewe):
+def clean_data(building_metrics, building_usage, building_compliance, current_ebewe):
 
     # Drop the unnecessary information from generating the reports
     current_ebewe.drop(columns = ['CUSTOMMODULE2 ID'], inplace = True)
@@ -15,10 +15,12 @@ def clean_data(building_metrics, building_usage, current_ebewe):
     # Format the LA Building ID columns
     current_ebewe['DBS Building ID'] = [str(x).split('.')[0] for x in current_ebewe['DBS Building ID']]
     building_metrics['Los Angeles Building ID'] = [str(x).split('.')[0] for x in building_metrics['Los Angeles Building ID']]
+    building_compliance['Los Angeles Building ID'] = [str(x).split('.')[0] for x in building_compliance['Los Angeles Building ID']]
 
     # Remove any leading or trailing spaces in the LA Building ID columns
     building_metrics['Los Angeles Building ID'] = building_metrics['Los Angeles Building ID'].replace(r"^ +| +$", r"", regex=True)
     current_ebewe['DBS Building ID'] = current_ebewe['DBS Building ID'].replace(r"^ +| +$", r"", regex=True)
+    building_compliance['Los Angeles Building ID'] = building_compliance['Los Angeles Building ID'].replace(r"^ +| +$", r"", regex=True)
 
     # Replace the nan strings values with NaNs
     curent_ebewe = current_ebewe.replace('nan', np.nan)
@@ -26,6 +28,7 @@ def clean_data(building_metrics, building_usage, current_ebewe):
     # Replace the Not Available values with NaNs
     building_metrics = building_metrics.replace('Not Available', np.nan)
     building_usage = building_usage.replace('Not Available', np.nan)
+    building_compliance = building_compliance.replace('Not Available', np.nan)
 
     # Format the month column to datetime
     building_usage['Month'] = pd.to_datetime(building_usage['Month'], format = '%b-%y')
@@ -35,6 +38,7 @@ def clean_data(building_metrics, building_usage, current_ebewe):
 
     # Reducing the building metrics df to contain only buildings that are in the current ebewe opp df
     building_metrics = building_metrics.loc[building_metrics['Los Angeles Building ID'].isin(list(current_ebewe['DBS Building ID']))]
+    building_compliance = building_compliance.loc[building_compliance['Los Angeles Building ID'].isin(list(current_ebewe['DBS Building ID']))]
 
     # Reducing the building usage df to only have the properties within the current ebewe opp df
     building_usage = building_usage.loc[building_usage['Property Id'].isin(list(building_metrics['Property Id']))]
@@ -44,4 +48,4 @@ def clean_data(building_metrics, building_usage, current_ebewe):
         building_usage.loc[row, 'Los Angeles Building ID'] = list(building_metrics.loc[building_metrics['Property Id'] == building_usage.loc[row, 'Property Id'], 'Los Angeles Building ID'])[0]
 
     # Return the cleaned dataframes
-    return building_metrics, building_usage
+    return building_metrics, building_usage, building_compliance

@@ -2,29 +2,14 @@ import pandas as pd
 from io import BytesIO
 import streamlit as st
 
-def create_workbook(complete_and_missing_dfs_by_CY):
-    (all_partials_data, 
-    ind_part_21_full_df, 
-    ind_part_21_miss_df, 
-    ind_part_22_full_df, 
-    ind_part_22_miss_df, 
-    ind_part_23_full_df, 
-    ind_part_23_miss_df, 
-    ind_part_24_full_df, 
-    ind_part_24_miss_df, 
-    ind_part_25_full_df, 
-    ind_part_25_miss_df, 
-    all_electric_data, 
-    ind_elec_21_full_df, 
-    ind_elec_21_miss_df, 
-    ind_elec_22_full_df, 
-    ind_elec_22_miss_df, 
-    ind_elec_23_full_df, 
-    ind_elec_23_miss_df, 
-    ind_elec_24_full_df, 
-    ind_elec_24_miss_df, 
-    ind_elec_25_full_df, 
-    ind_elec_25_miss_df) = complete_and_missing_dfs_by_CY
+def create_workbook(all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, 
+                    ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, 
+                    ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, 
+                    ind_part_25_full_df, ind_part_25_miss_df, all_electric_data, 
+                    ind_elec_21_full_df, ind_elec_21_miss_df, ind_elec_22_full_df, 
+                    ind_elec_22_miss_df, ind_elec_23_full_df, ind_elec_23_miss_df, 
+                    ind_elec_24_full_df, ind_elec_24_miss_df, ind_elec_25_full_df, 
+                    ind_elec_25_miss_df):
 
     data = BytesIO()
     with pd.ExcelWriter(data) as writer:

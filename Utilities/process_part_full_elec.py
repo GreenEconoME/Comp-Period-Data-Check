@@ -2,12 +2,13 @@
 import pandas as pd
 import datetime as dt
 import streamlit as st
+import numpy as np
 
 # Import helper functions
-from Utilities.create_part_and_full_data import create_part_data, create_full_elec_data
+from Utilities.create_part_and_full_data import create_energy_data
 from Utilities.divide_cy_ids import divide_cy_ids
 
-def process_part_elec(building_metrics, building_usage):
+def process_part_full_elec(building_metrics, building_usage, building_compliance):
 
     # Create a list of the LA Building IDs for properties that are partially electric
     part_elec_ids = list(building_metrics.loc[~(building_metrics['Percent Electricity'].isnull()) 
@@ -173,30 +174,48 @@ def process_part_elec(building_metrics, building_usage):
     elec_25_miss_df = building_metrics.loc[building_metrics['Property Id'].isin(elec_25_missing_data)]
 
     # Create dataframes to save with the building and their earliest and latest gas/electric billing data
-    all_partials_data = create_part_data(partials_df, building_usage, building_metrics)
-    ind_part_21_full_df = create_part_data(partial_21_full_df, building_usage, building_metrics)
-    ind_part_21_miss_df = create_part_data(partial_21_miss_df, building_usage, building_metrics)
-    ind_part_22_full_df = create_part_data(partial_22_full_df, building_usage, building_metrics)
-    ind_part_22_miss_df = create_part_data(partial_22_miss_df, building_usage, building_metrics)
-    ind_part_23_full_df = create_part_data(partial_23_full_df, building_usage, building_metrics)
-    ind_part_23_miss_df = create_part_data(partial_23_miss_df, building_usage, building_metrics)
-    ind_part_24_full_df = create_part_data(partial_24_full_df, building_usage, building_metrics)
-    ind_part_24_miss_df = create_part_data(partial_24_miss_df, building_usage, building_metrics)
-    ind_part_25_full_df = create_part_data(partial_25_full_df, building_usage, building_metrics)
-    ind_part_25_miss_df = create_part_data(partial_25_miss_df, building_usage, building_metrics)
+    ind_part_21_full_df = create_energy_data(partial_21_full_df, building_usage, building_metrics, building_compliance, 2021, True)
+    ind_part_21_miss_df = create_energy_data(partial_21_miss_df, building_usage, building_metrics, building_compliance, 2021, True)
+    ind_part_22_full_df = create_energy_data(partial_22_full_df, building_usage, building_metrics, building_compliance, 2022, True)
+    ind_part_22_miss_df = create_energy_data(partial_22_miss_df, building_usage, building_metrics, building_compliance, 2022, True)
+    ind_part_23_full_df = create_energy_data(partial_23_full_df, building_usage, building_metrics, building_compliance, 2023, True)
+    ind_part_23_miss_df = create_energy_data(partial_23_miss_df, building_usage, building_metrics, building_compliance, 2023, True)
+    ind_part_24_full_df = create_energy_data(partial_24_full_df, building_usage, building_metrics, building_compliance, 2024, True)
+    ind_part_24_miss_df = create_energy_data(partial_24_miss_df, building_usage, building_metrics, building_compliance, 2024, True)
+    ind_part_25_full_df = create_energy_data(partial_25_full_df, building_usage, building_metrics, building_compliance, 2025, True)
+    ind_part_25_miss_df = create_energy_data(partial_25_miss_df, building_usage, building_metrics, building_compliance, 2025, True)
+    all_partials_data = pd.concat([ind_part_21_full_df,
+                                    ind_part_21_miss_df,
+                                    ind_part_22_full_df,
+                                    ind_part_22_miss_df,
+                                    ind_part_23_full_df,
+                                    ind_part_23_miss_df,
+                                    ind_part_24_full_df,
+                                    ind_part_24_miss_df,
+                                    ind_part_25_full_df,
+                                    ind_part_25_miss_df])
 
     # Create dataframes to save with the building and their earliest and latest electric billing data
-    all_electric_data = create_full_elec_data(full_elec_df, building_usage, building_metrics)
-    ind_elec_21_full_df = create_full_elec_data(elec_21_full_df, building_usage, building_metrics)
-    ind_elec_21_miss_df = create_full_elec_data(elec_21_miss_df, building_usage, building_metrics)
-    ind_elec_22_full_df = create_full_elec_data(elec_22_full_df, building_usage, building_metrics)
-    ind_elec_22_miss_df = create_full_elec_data(elec_22_miss_df, building_usage, building_metrics)
-    ind_elec_23_full_df = create_full_elec_data(elec_23_full_df, building_usage, building_metrics)
-    ind_elec_23_miss_df = create_full_elec_data(elec_23_miss_df, building_usage, building_metrics)
-    ind_elec_24_full_df = create_full_elec_data(elec_24_full_df, building_usage, building_metrics)
-    ind_elec_24_miss_df = create_full_elec_data(elec_24_miss_df, building_usage, building_metrics)
-    ind_elec_25_full_df = create_full_elec_data(elec_25_full_df, building_usage, building_metrics)
-    ind_elec_25_miss_df = create_full_elec_data(elec_25_miss_df, building_usage, building_metrics)
+    ind_elec_21_full_df = create_energy_data(elec_21_full_df, building_usage, building_metrics, building_compliance, 2021, False)
+    ind_elec_21_miss_df = create_energy_data(elec_21_miss_df, building_usage, building_metrics, building_compliance, 2021, False)
+    ind_elec_22_full_df = create_energy_data(elec_22_full_df, building_usage, building_metrics, building_compliance, 2022, False)
+    ind_elec_22_miss_df = create_energy_data(elec_22_miss_df, building_usage, building_metrics, building_compliance, 2022, False)
+    ind_elec_23_full_df = create_energy_data(elec_23_full_df, building_usage, building_metrics, building_compliance, 2023, False)
+    ind_elec_23_miss_df = create_energy_data(elec_23_miss_df, building_usage, building_metrics, building_compliance, 2023, False)
+    ind_elec_24_full_df = create_energy_data(elec_24_full_df, building_usage, building_metrics, building_compliance, 2024, False)
+    ind_elec_24_miss_df = create_energy_data(elec_24_miss_df, building_usage, building_metrics, building_compliance, 2024, False)
+    ind_elec_25_full_df = create_energy_data(elec_25_full_df, building_usage, building_metrics, building_compliance, 2025, False)
+    ind_elec_25_miss_df = create_energy_data(elec_25_miss_df, building_usage, building_metrics, building_compliance, 2025, False)
+    all_electric_data = pd.concat([ind_elec_21_full_df,
+                                    ind_elec_21_miss_df,
+                                    ind_elec_22_full_df,
+                                    ind_elec_22_miss_df,
+                                    ind_elec_23_full_df,
+                                    ind_elec_23_miss_df,
+                                    ind_elec_24_full_df,
+                                    ind_elec_24_miss_df,
+                                    ind_elec_25_full_df,
+                                    ind_elec_25_miss_df])
 
     #############################
     # Return the partially electric dataframes for buildings with full data, and those with missing data
