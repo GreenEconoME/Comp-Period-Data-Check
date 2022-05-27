@@ -1,7 +1,8 @@
+# Import dependencies
 import pandas as pd
 from io import BytesIO
-import streamlit as st
 
+# Define a function that will export the generated dataframes into an excel workbook
 def create_workbook(all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, 
                     ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, 
                     ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, 
@@ -40,4 +41,5 @@ def create_workbook(all_partials_data, ind_part_21_full_df, ind_part_21_miss_df,
         ind_elec_25_miss_df.to_excel(writer, sheet_name = 'Fully E CY 25 Missing Data', index = False)
 
     workbook = data.getvalue()
+    
     return workbook

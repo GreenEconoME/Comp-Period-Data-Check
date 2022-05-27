@@ -219,4 +219,11 @@ def process_part_full_elec(building_metrics, building_usage, building_compliance
 
     #############################
     # Return the partially electric dataframes for buildings with full data, and those with missing data
-    return all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, ind_part_25_full_df, ind_part_25_miss_df, all_electric_data, ind_elec_21_full_df, ind_elec_21_miss_df, ind_elec_22_full_df, ind_elec_22_miss_df, ind_elec_23_full_df, ind_elec_23_miss_df, ind_elec_24_full_df, ind_elec_24_miss_df, ind_elec_25_full_df, ind_elec_25_miss_df
+    return (all_partials_data, ind_part_21_full_df, ind_part_21_miss_df, 
+            ind_part_22_full_df, ind_part_22_miss_df, ind_part_23_full_df, 
+            ind_part_23_miss_df, ind_part_24_full_df, ind_part_24_miss_df, 
+            ind_part_25_full_df, ind_part_25_miss_df, all_electric_data, 
+            ind_elec_21_full_df, ind_elec_21_miss_df, ind_elec_22_full_df, 
+            ind_elec_22_miss_df, ind_elec_23_full_df, ind_elec_23_miss_df, 
+            ind_elec_24_full_df, ind_elec_24_miss_df, ind_elec_25_full_df, 
+            ind_elec_25_miss_df)

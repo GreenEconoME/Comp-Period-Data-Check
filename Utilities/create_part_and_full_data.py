@@ -1,3 +1,4 @@
+# Import dependencies
 import pandas as pd
 import numpy as np
 import math
@@ -46,11 +47,12 @@ def create_energy_data(cy_df, usage_df, metrics_df, building_compliance, comp_ye
 
                 # Grab the most recent Energy Star score and the corresponding year
                 data['Energy Star Score'] = building_compliance.loc[non_null_es & recent_non_null, 'ENERGY STAR Score'].item()
-                data['ES Score Year Ending'] = building_compliance.loc[non_null_es & recent_non_null, 'Year Ending'].item().strftime('%Y-%m-%d')
+                data['ES Score Year Ending'] = building_compliance.loc[non_null_es & recent_non_null, 'Year Ending'].item().strftime('%m/%d/%Y')
 
-            except:
+            except Exception as e:
+                # st.write(e)
                 data['Energy Star Score'] = np.nan
-                data['Year Ending'] = np.nan
+                data['ES Score Year Ending'] = np.nan
                 
             # Gather the most EBEWE Compliance data for compliance years 2021 and 2022
             if comp_year in [2021, 2022]:            
@@ -118,7 +120,8 @@ def create_energy_data(cy_df, usage_df, metrics_df, building_compliance, comp_ye
             
         except ValueError:
             pass
-            
+
+    # Create dataframe from the dictionary of gathered property data 
     building_df = pd.DataFrame.from_dict(data_list)
     
     return building_df
