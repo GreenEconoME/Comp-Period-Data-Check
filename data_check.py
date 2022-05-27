@@ -248,15 +248,15 @@ if etl_has_ran:
                 color = 'green'
             return f'color: {color}'
         
-        # # Display the formatted selected dataframe
-        # st.dataframe(selected_data.reset_index(drop = True)
-        #                             .style
-        #                             .applymap(es_coder, subset = ['Energy Star Score'])
-        #                             .applymap(eui_coder, subset = ['Best EUI Shift %'])
-        #                             .applymap(wui_coder, subset = ['Best WUI Shift %'])
-        #                             .format(formatter = {'Energy Star Score' : '{:.0f}', 
-        #                                                 'Best EUI Shift %' : '{:.2f}', 
-        #                                                 'Best WUI Shift %' : '{:.2f}'}))
+        # Display the formatted selected dataframe
+        st.dataframe(selected_data.reset_index(drop = True)
+                                    .style
+                                    .applymap(es_coder, subset = ['Energy Star Score'])
+                                    .applymap(eui_coder, subset = ['Best EUI Shift %'])
+                                    .applymap(wui_coder, subset = ['Best WUI Shift %'])
+                                    .format(formatter = {'Energy Star Score' : '{:.0f}', 
+                                                        'Best EUI Shift %' : '{:.2f}', 
+                                                        'Best WUI Shift %' : '{:.2f}'}))
 
     # If there are no buildings within the selected dataframe, return an explanation
     except Exception as e:
