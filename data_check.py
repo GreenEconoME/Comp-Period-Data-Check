@@ -309,7 +309,10 @@ if etl_has_ran:
         else:
             st.dataframe(selected_data.reset_index(drop = True)
                                         .style
-                                        .applymap(es_coder, subset = ['Energy Star Score']))
+                                        .applymap(es_coder, subset = ['Energy Star Score'])
+                                        .format(formatter = {'Energy Star Score' : '{:.0f}', 
+                                                            'Best EUI Shift %' : '{:.2f}', 
+                                                            'Best WUI Shift %' : '{:.2f}'}))
 
     # If there are no buildings within the selected dataframe, return an explanation
     except Exception as e:
