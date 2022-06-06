@@ -304,9 +304,12 @@ if etl_has_ran:
                                         .format(formatter = {'Energy Star Score' : '{:.0f}', 
                                                             'Best EUI Shift %' : '{:.2f}', 
                                                             'Best WUI Shift %' : '{:.2f}'}))
-
+        
+        # If not looking at 2021/2022 compliance years - only display formatted ES Score column
         else:
-            st.dataframe(selected_data.style.applymap(es_coder, subset = ['Energy Star Score']))
+            st.dataframe(selected_data.reset_index(drop = True)
+                                        .style
+                                        .applymap(es_coder, subset = ['Energy Star Score']))
 
     # If there are no buildings within the selected dataframe, return an explanation
     except Exception as e:
