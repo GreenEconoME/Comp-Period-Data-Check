@@ -5,6 +5,7 @@ from Utilities.clean_data import clean_data
 from Utilities.process_part_full_elec import process_part_full_elec
 from Utilities.create_workbook import create_workbook
 from Utilities.plot_kbtu_data import plot_kbtu_data
+import numpy as np
 
 # Set config to have a wide layout
 st.set_page_config(layout = 'wide')
@@ -176,19 +177,60 @@ if etl_has_ran:
         # Plot the chosen building
         st.plotly_chart(plot_kbtu_data(building_usage, building_choice, part_or_full), use_container_width = True)
 
-        # Define used metrics
-        earliest_gas = selected_data.loc[selected_data['Property Name'] == building_choice, 'Earliest Gas Data'].item()
-        latest_gas = selected_data.loc[selected_data['Property Name'] == building_choice, 'Latest Gas Data'].item()
-        earliest_electric = selected_data.loc[selected_data['Property Name'] == building_choice, 'Earliest Electric Data'].item()
-        latest_electric = selected_data.loc[selected_data['Property Name'] == building_choice, 'Latest Electric Data'].item()
-        es_score_metric = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Energy Star Score'].item():.0f}"
-        es_score_year_metric = selected_data.loc[selected_data['Property Name'] == building_choice, 'ES Score Year Ending'].item()
-        primary_use_type = selected_data.loc[selected_data['Property Name'] == building_choice, 'Primary Property Type'].item()
-        best_eui_shift = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best EUI Shift %'].item()}%"
-        best_eui_shift_year = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best EUI Shift Year'].item()}"
-        best_wui_shift = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best WUI Shift %'].item()}%"
-        best_wui_shift_year = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best WUI Shift Year'].item()}"
+        # Define used metrics - if they exist, grab the metric. If they do not exist - set the metric to nan
+        try:
+            earliest_gas = selected_data.loc[selected_data['Property Name'] == building_choice, 'Earliest Gas Data'].item()
+        except:
+            earliest_gas = np.nan
+        try:
+            latest_gas = selected_data.loc[selected_data['Property Name'] == building_choice, 'Latest Gas Data'].item()
+        except: 
+            latest_gas = np.nan
 
+        try:
+            earliest_electric = selected_data.loc[selected_data['Property Name'] == building_choice, 'Earliest Electric Data'].item()
+        except:
+            earliest_electric = np.nan
+
+        try:
+            latest_electric = selected_data.loc[selected_data['Property Name'] == building_choice, 'Latest Electric Data'].item()
+        except:
+            latest_electric = np.nan
+
+        try:
+            es_score_metric = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Energy Star Score'].item():.0f}"
+        except:
+            es_score_metric = np.nan
+
+        try:
+            es_score_year_metric = selected_data.loc[selected_data['Property Name'] == building_choice, 'ES Score Year Ending'].item()
+        except:
+            es_score_year_metric = np.nan
+
+        try:
+            primary_use_type = selected_data.loc[selected_data['Property Name'] == building_choice, 'Primary Property Type'].item()
+        except:
+            primary_use_type = np.nan
+
+        try:
+            best_eui_shift = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best EUI Shift %'].item()}%"
+        except:
+            best_eui_shift = np.nan
+
+        try:
+            best_eui_shift_year = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best EUI Shift Year'].item()}"
+        except:
+            best_eui_shift_year = np.nan
+
+        try:
+            best_wui_shift = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best WUI Shift %'].item()}%"
+        except:
+            best_wui_shift = np.nan
+
+        try:
+            best_wui_shift_year = f"{selected_data.loc[selected_data['Property Name'] == building_choice, 'Best WUI Shift Year'].item()}"
+        except:
+            best_wui_shift_year = np.nan
 
         # Display the earliest and latest data for the selected building
         # If viewing partially electric buildings, display earliest/latest gas/electric dates
@@ -248,15 +290,23 @@ if etl_has_ran:
                 color = 'green'
             return f'color: {color}'
         
-        # Display the formatted selected dataframe
-        st.dataframe(selected_data.reset_index(drop = True)
-                                    .style
-                                    .applymap(es_coder, subset = ['Energy Star Score'])
-                                    .applymap(eui_coder, subset = ['Best EUI Shift %'])
-                                    .applymap(wui_coder, subset = ['Best WUI Shift %'])
-                                    .format(formatter = {'Energy Star Score' : '{:.0f}', 
-                                                        'Best EUI Shift %' : '{:.2f}', 
-                                                        'Best WUI Shift %' : '{:.2f}'}))
+        # st.write(ind_part_22_miss_df)
+
+        # If looking at 2021 or 2022 data - display the dataframe with formatted compliance metrics
+        if dataset_choice in (['Compliance Year 2021 Full Data', 'Compliance Year 2021 Missing Data',
+                                'Compliance Year 2022 Full Data', 'Compliance Year 2022 Missing Data']):
+            # Display the formatted selected dataframe
+            st.dataframe(selected_data.reset_index(drop = True)
+                                        .style
+                                        .applymap(es_coder, subset = ['Energy Star Score'])
+                                        .applymap(eui_coder, subset = ['Best EUI Shift %'])
+                                        .applymap(wui_coder, subset = ['Best WUI Shift %'])
+                                        .format(formatter = {'Energy Star Score' : '{:.0f}', 
+                                                            'Best EUI Shift %' : '{:.2f}', 
+                                                            'Best WUI Shift %' : '{:.2f}'}))
+
+        else:
+            st.dataframe(selected_data.style.applymap(es_coder, subset = ['Energy Star Score']))
 
     # If there are no buildings within the selected dataframe, return an explanation
     except Exception as e:
